@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Someday (Demo)</title>
+    <style>
+        /* 让页面占满整个视口 */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 防止出现不必要的滚动条 */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column; /* 垂直布局 */
+            background-color: #1a1a1a;
+            color: #ccc;
+            font-family: sans-serif;
+        }
+
+        /* 游戏容器，占据大部分可用空间 */
+        main#game-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0; /* 防止 flex 容器溢出 */
+        }
+        
+        /* p5.js 的画布样式 */
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* 给画布加一点阴影 */
+        }
+
+        /* 页脚样式 */
+        footer {
+            flex-shrink: 0; /* 防止页脚被压缩 */
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            background-color: #111;
+            border-top: 1px solid #333;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- p5.js 画布将被注入到这里 -->
+    <main id="game-container"></main>
+
+    <!-- 页脚信息 -->
+    <footer>
+        <span>A game by [Your Name]</span> | 
+        <a href="#" target="_blank">Twitter</a> | 
+        <a href="#" target="_blank">More Games</a>
+    </footer>
+    
+    <!-- 按正确顺序加载您的游戏文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/addons/p5.sound.min.js"></script>
+    
+    <script src="story_data.js"></script>
+    <script src="ui.js"></script>
+    <script src="sceneManager.js"></script>
+    <script src="Someday.js"></script>        
+</body>
+</html>
