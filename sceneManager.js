@@ -8,6 +8,7 @@ const sceneManager = {
     isNewEnding: false,
     dialogueWriter: null,
     locationPage: 0, 
+    currentBGM: null, // 【新增】用于跟踪当前背景音乐
 
     // CG 动画相关的属性
     cgStartTime: 0,
@@ -34,13 +35,16 @@ const sceneManager = {
             this.locationPage = 0;
         }
 
+        // 【新增】音频处理逻辑
+        this.handleAudio(this.currentSceneData);
+
         switch (this.currentSceneData.type) {
             case 'mainMenu': this.createMainMenu(); break;
             case 'actionSelection': this.createActionSelection(); break;
             case 'locationSelection': this.createLocationSelection(); break;
             case 'ending': this.createEnding(); break;
             case 'achievements': this.createAchievementsPage(); break;
-            case 'loopingCG': this.createLoopingCG(); break;
+            case 'cgScene': this.createCgScene(); break;
         }
     },
 
@@ -51,7 +55,7 @@ const sceneManager = {
             textFont(assets.handwritingFont);
         }
 
-        if (this.currentSceneData.type === 'ending'|| this.currentSceneData.type === 'loopingCG') {
+        if (this.currentSceneData.type === 'ending'|| this.currentSceneData.type === 'cgScene') {
             background(0); 
         } else {
             background(255); 
@@ -63,7 +67,7 @@ const sceneManager = {
             case 'locationSelection': this.drawLocationSelection(); break;
             case 'ending': this.drawEnding(); break;
             case 'achievements': this.drawAchievementsPage(); break;
-            case 'loopingCG': this.drawLoopingCG(); break;
+            case 'cgScene': this.drawCgScene(); break;
         }
 
         if (isPaused) {
@@ -86,10 +90,9 @@ const sceneManager = {
             return;
         }
 
-        // 【核心改动】在结局页面点击后，跳转到 loopingCG
         if (this.currentSceneData.type === 'ending') {
-             loadScene('loopingCG');
-             return;
+            loadScene('loopingCG');
+            return;
         }
         if (this.currentSceneData.type === 'achievements') {
             if (this.uiElements.closeButton && this.uiElements.closeButton.isMouseOver()) {
@@ -122,6 +125,11 @@ const sceneManager = {
         
         for (const button of this.activeButtons) {
             if (button.isMouseOver()) {
+
+                if (assets.sfx_click) { // 【新增】播放按钮点击音效
+                    assets.sfx_click.play();
+                }
+
                 let target = button.targetNode;
                 let action = button.action;
 
@@ -160,6 +168,40 @@ const sceneManager = {
             this.uiElements.achievementsList.handleScroll(event);
         }
     },
+
+    handleAudio: function(sceneData) {
+        // 处理背景音乐 (BGM)
+        if (sceneData.bgm) {
+            const bgmAsset = assets[sceneData.bgm];
+            if (bgmAsset) {
+                // 如果请求的BGM与当前播放的不同
+                if (!this.currentBGM || this.currentBGM.key !== sceneData.bgm) {
+                    // 停止当前正在播放的BGM
+                    if (this.currentBGM && this.currentBGM.isPlaying()) {
+                        this.currentBGM.stop();
+                    }
+                    // 循环播放新的BGM
+                    bgmAsset.loop();
+                    this.currentBGM = bgmAsset;
+                    this.currentBGM.key = sceneData.bgm; // 附加一个key用于识别
+                }
+            }
+        } else {
+            // 如果这个场景没有指定BGM，则停止当前播放的音乐
+            if (this.currentBGM && this.currentBGM.isPlaying()) {
+                this.currentBGM.stop();
+                this.currentBGM = null;
+            }
+        }
+
+        // 处理一次性音效 (SFX)
+        if (sceneData.sfx) {
+            const sfxAsset = assets[sceneData.sfx];
+            if (sfxAsset) {
+                sfxAsset.play();
+            }
+        }
+    },
     
     transitionLocationButtons: function(isPaging = false) {
         this.activeButtons.forEach(btn => btn.fadeOut());
@@ -188,18 +230,18 @@ const sceneManager = {
         this.uiElements.pauseButton = new ImageButton(40, 40, 40, 40, assets.ui_pause_normal, assets.ui_pause_hover);
         
         if (this.currentSceneData.dialogue) {
-           const dialogueBoxW = width * 0.6;
-           const dialogueBoxH = 120;
-           const padding = 25; 
-           const dialogueBoxTopLeftX = (width / 2) - (dialogueBoxW / 2);
-           const dialogueBoxTopLeftY = (height - dialogueBoxH - 30);
-           this.dialogueWriter = new Typewriter(
-               this.currentSceneData.dialogue, 
-               dialogueBoxTopLeftX + padding, 
-               dialogueBoxTopLeftY, 
-               dialogueBoxW - padding * 2, 
-               dialogueBoxH
-           );
+               const dialogueBoxW = width * 0.8; 
+               const dialogueBoxH = 120;
+               const padding = 25; 
+               const dialogueBoxTopLeftX = (width / 2) - (dialogueBoxW / 2);
+               const dialogueBoxTopLeftY = (height - dialogueBoxH - 30);
+               this.dialogueWriter = new Typewriter(
+                   this.currentSceneData.dialogue, 
+                   dialogueBoxTopLeftX + padding, 
+                   dialogueBoxTopLeftY, 
+                   dialogueBoxW - padding * 2, 
+                   dialogueBoxH
+               );
         }
 
         if (this.currentSceneData.choices) {
@@ -210,6 +252,7 @@ const sceneManager = {
             this.currentSceneData.choices.forEach((choice) => {
                 if (this.evaluateCondition(choice.condition)) {
                     let btn = new TextButton(btnX, startY + i * 45, btnW, 0, choice.text, true);
+                    btn.textPadding = 6; // Reduce left padding for tighter text
                     btn.targetNode = choice.target;
                     btn.target_conditional = choice.target_conditional;
                     btn.action = choice.action;
@@ -280,10 +323,10 @@ const sceneManager = {
         this.uiElements.achievementsList = new AchievementsList(50, 120, width - 100, height - 180, allEndings);
     },
 
-    createLoopingCG: function() {
-        this.cgStartTime = millis(); // 记录 CG 开始的时间
-        this.cgDuration = this.currentSceneData.duration || 1500;
-        this.cgTarget = this.currentSceneData.target || 'start';
+    createCgScene: function() {
+    this.cgStartTime = millis();
+    this.cgDuration = this.currentSceneData.duration || 3000;
+    this.cgTarget = this.currentSceneData.target || 'start';
     },
 
     drawMainMenu: function() {
@@ -321,11 +364,11 @@ const sceneManager = {
         }
 
         if (this.currentSceneData.dialogue) {
-            let dialogueBoxW = width * 0.6;
+            let dialogueBoxW = width * 0.8;
             let dialogueBoxH = 120;
             push();
             rectMode(CENTER);
-            stroke(200);
+            stroke(0);
             strokeWeight(2);
             fill(255, 255, 255, 230); 
             rect(width / 2, height - dialogueBoxH / 2 - 30, dialogueBoxW, dialogueBoxH, 15);
@@ -453,23 +496,62 @@ const sceneManager = {
         this.uiElements.pauseMenuButtons.forEach(btn => btn.display());
     },
 
-    // 【新增】绘制 loopingCG 场景的函数
-    drawLoopingCG: function() {
+    drawCgScene: function() {
         let elapsedTime = millis() - this.cgStartTime;
-        let progress = elapsedTime / this.cgDuration;
+        let progress = min(elapsedTime / this.cgDuration, 1.0); // 将进度限制在0到1之间
 
-        // 根据时间进度显示省略号
-        let dots = '';
-        if (progress > 0.25) dots = '.';
-        if (progress > 0.5) dots = '..';
-        if (progress > 0.75) dots = '...';
+        const cgImageKey = this.currentSceneData.image;
         
-        push();
-        fill(255);
-        textAlign(CENTER, CENTER);
-        textSize(64);
-        text(dots, width / 2, height / 2);
-        pop();
+        // 检查是否存在 image 属性并且该图片已成功加载
+        if (cgImageKey && assets[cgImageKey]) {
+            const img = assets[cgImageKey]; // 获取图片对象
+
+            // --- 计算图片尺寸以适应屏幕并保持比例 ---
+            let imgWidth = img.width;
+            let imgHeight = img.height;
+
+            // 计算横向和纵向的适应比例
+            let ratioX = width / imgWidth;
+            let ratioY = height / imgHeight;
+
+            let scale = min(ratioX, ratioY); // 取较小的比例以确保图片完全可见
+
+            let displayW = imgWidth * scale;
+            let displayH = imgHeight * scale;
+
+            // 计算绘制的X和Y坐标，使图片居中
+            let displayX = (width - displayW) / 2;
+            let displayY = (height - displayH) / 2;
+
+            // --- 绘制图片 ---
+            push();
+            // 根据进度计算一个简单的淡入透明度 (在CG前半段时间内完成淡入)
+            let alpha = map(progress, 0, 0.5, 0, 255, true);
+            tint(255, alpha); // 应用透明度
+
+            // 使用计算出的位置和尺寸绘制图片
+            image(img, displayX, displayY, displayW, displayH);
+            pop();
+
+        } else {
+            // --- 如果没有图片，则回退到显示文字 ---
+            let textToShow = this.currentSceneData.text || '...';
+            // 如果是默认的'...'，则播放点点点动画
+            if (textToShow === '...') {
+                if (progress > 0.75) textToShow = '...';
+                else if (progress > 0.5) textToShow = '..';
+                else if (progress > 0.25) textToShow = '.';
+                else textToShow = '';
+            }
+            
+            push();
+            let alpha = map(progress, 0, 0.5, 0, 255, true);
+            fill(255, alpha);
+            textAlign(CENTER, CENTER);
+            textSize(64);
+            text(textToShow, width / 2, height / 2);
+            pop();
+        }
 
         // 时间到了，就跳转到目标场景
         if (elapsedTime >= this.cgDuration) {
@@ -523,4 +605,3 @@ const sceneManager = {
         return null;
     }
 };
-
