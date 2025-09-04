@@ -52,7 +52,7 @@ function preload() {
 
     // --- 5. 字体 (可选) ---
     // 【修正】恢复字体加载
-    assets.handwritingFont = loadFont('assets/Moon Flower Bold.ttf');
+    assets.handwritingFont = loadFont('assets/MRF Lemonberry Sans.otf');
 
     // --- 6. 音频资源 (新增) ---
     // 假设的音频文件名，请替换为您自己的文件名
