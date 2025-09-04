@@ -7,18 +7,19 @@
     <style>
         /* 让页面占满整个视口 */
         html, body {
-            height: 100%;
+            height: 100vh; 
             margin: 0;
             padding: 0;
-            overflow: hidden; /* 防止出现不必要的滚动条 */
+            overflow: hidden; 
         }
 
         body {
             display: flex;
-            flex-direction: column; /* 垂直布局 */
+            flex-direction: column;
             background-color: #1a1a1a;
             color: #ccc;
             font-family: sans-serif;
+            --footer-height: 55px;
         }
 
         /* 游戏容器，占据大部分可用空间 */
@@ -27,25 +28,34 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 0; /* 防止 flex 容器溢出 */
+            min-height: 0;
+            transition: padding-bottom 0.4s ease-in-out;
         }
-        
+
         /* p5.js 的画布样式 */
         canvas {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* 给画布加一点阴影 */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         /* 页脚样式 */
         footer {
-            flex-shrink: 0; /* 防止页脚被压缩 */
             padding: 15px;
             text-align: center;
             font-size: 14px;
             background-color: #111;
             border-top: 1px solid #333;
+            box-sizing: border-box;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: var(--footer-height);
+            transform: translateY(100%);
+            transition: transform 0.4s ease-in-out;
+            z-index: 900; /* 添加 z-index 以确保它在游戏画布之上 */
         }
 
         footer a {
@@ -59,7 +69,15 @@
             text-decoration: underline;
         }
 
-        /* --- 新增：用于移动设备横屏提示的样式 --- */
+        /* --- 控制页脚显示状态的 Class --- */
+        footer.footer-visible {
+            transform: translateY(0);
+        }
+
+        body.footer-is-visible main#game-container {
+            padding-bottom: var(--footer-height);
+        }
+        /* 竖屏提示样式 */
         #orientation-prompt {
             display: none; /* 默认隐藏 */
             position: fixed;
@@ -67,9 +85,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.95);
             color: white;
-            z-index: 1000;
+            z-index: 1000; /* z-index 要比 footer 高 */
             justify-content: center;
             align-items: center;
             text-align: center;
@@ -79,10 +97,10 @@
         /* 使用 @media 查询，仅在竖屏时显示提示 */
         @media (orientation: portrait) {
             #orientation-prompt {
-                display: flex;
+                display: flex; /* 在竖屏时显示提示 */
             }
-            main#game-container {
-                display: none; /* 竖屏时隐藏游戏 */
+            main#game-container, footer {
+                display: none; /* 在竖屏时隐藏游戏和页脚 */
             }
         }
     </style>
@@ -111,6 +129,54 @@
     <script src="story_data.js"></script>
     <script src="ui.js"></script>
     <script src="sceneManager.js"></script>
-    <script src="Someday.js"></script>        
+    <script src="Someday.js"></script>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const footer = document.querySelector('footer');
+            let touchStartY = 0;
+
+            const showFooter = () => {
+                body.classList.add('footer-is-visible');
+                footer.classList.add('footer-visible');
+            };
+
+            const hideFooter = () => {
+                body.classList.remove('footer-is-visible');
+                footer.classList.remove('footer-visible');
+            };
+
+            // --- 监听鼠标滚轮事件 (桌面端) ---
+            document.addEventListener('wheel', (event) => {
+                // event.deltaY > 0 表示向下滚动 (尝试查看下方内容)
+                if (event.deltaY > 0) {
+                    showFooter();
+                } 
+                // event.deltaY < 0 表示向上滚动 (尝试查看上方内容)
+                else if (event.deltaY < 0) {
+                    hideFooter();
+                }
+            }, { passive: true });
+
+            // --- 监听触摸滑动事件 (移动端) ---
+            document.addEventListener('touchstart', (event) => {
+                // 记录触摸开始时的垂直位置
+                touchStartY = event.touches[0].clientY;
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (event) => {
+                const touchCurrentY = event.touches[0].clientY;
+                // 如果当前位置低于起始位置，表示向上滑动
+                if (touchStartY > touchCurrentY + 5) { // +5 是为了增加一点点灵敏度阈值
+                    showFooter();
+                }
+                // 如果当前位置高于起始位置，表示向下滑动
+                else if (touchStartY < touchCurrentY - 5) {
+                    hideFooter();
+                }
+            }, { passive: true });
+        });
+    </script>
 </body>
 </html>
