@@ -11,9 +11,10 @@ const story = {
 
     // 结局后的循环 CG 节点
     'loopingCG': {
-        type: 'loopingCG',       // 场景类型
-        duration: 1500,          // 持续时间 (1.5秒)
-        target: 'start'          // 结束后跳转到 'start' 节点
+        type: 'cgScene',       // 场景类型
+        duration: 2000,          // 持续时间 (1.5秒)
+        target: 'start',          // 结束后跳转到 'start' 节点
+        sfx: 'sfx_loop'     // 循环背景音效 (假设已在 assets 中定义)
     },
 
     // --- 【游戏故事起点】 ---
@@ -21,17 +22,25 @@ const story = {
         type: 'actionSelection',
         background: 'scene_bedroom_morning',
         dialogue: '[Alarm] Beep Beep Beep...',
+        bgm: 'bgm_start', // 在此场景循环播放背景音乐
         choices: [
-            { text: 'Get Up', target: 'location_select_morning' },
+            { text: 'Get Up', target: 'getting_up_cg' },
             { text  : 'Snoozzzze...', target: 'snooze_midday' }
         ]
+    },
+
+    'getting_up_cg': { // 新的过场CG节点
+        type: 'cgScene',
+        duration: 1200,     // 持续1.2秒
+        image: 'cg_getUp', // 【新增】指定要显示的图片
+        target: 'location_select_morning' // CG结束后跳转到地点选择
     },
     'snooze_midday': {
         type: 'actionSelection',
         background: 'scene_bedroom_midday',
         dialogue: 'You drift back to sleep. The sun is higher in the sky now.',
         choices: [
-            { text: 'Get Up', target: 'location_select_midday' },
+            { text: 'Get Up', target: 'getting_up_cg' },
             { text: 'Snooze', target: 'snooze_night' }
         ]
     },
@@ -40,7 +49,7 @@ const story = {
         background: 'scene_bedroom_night',
         dialogue: 'Darkness falls. The day is gone. Perhaps... forever?',
         choices: [
-            { text: 'Get Up', target: 'location_select_night' },
+            { text: 'Get Up', target: 'getting_up_cg' },
             { text: 'Snooze', target: 'ending_eternal_sleep' }
         ]
     },
