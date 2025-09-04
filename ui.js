@@ -30,7 +30,7 @@ class Typewriter {
             if (assets.handwritingFont) {
                 textFont(assets.handwritingFont);
             }
-            textSize(18);
+            textSize(22);
             let width = textWidth(currentLine + " " + word);
             if (width < maxWidth) {
                 currentLine += " " + word;
@@ -62,7 +62,7 @@ class Typewriter {
         fill(textColor);
         noStroke();
         textAlign(CENTER, CENTER);
-        textSize(18);
+        textSize(22);
         if (assets.handwritingFont) {
             textFont(assets.handwritingFont);
         }
@@ -88,17 +88,22 @@ class TextButton {
         this.text = text;
         this.isSmall = isSmall;
         this.isHovered = false;
-        
+
+        let calculatedHeight;
+
         if (assets.handwritingFont) {
             textFont(assets.handwritingFont);
         }
         
         if(this.isSmall){
-            textSize(16);
-            this.h = textSize() * 2.2;
+            textSize(20);
+            calculatedHeight = textSize() * 1.9;
         } else {
-            this.h = h;
+            textSize(28); // 您之前调整后的大小
+            calculatedHeight = textSize() * 1.8; // 为大按钮也设置一个紧凑的比例
         }
+        
+        this.h = h > 0 ? h : calculatedHeight;
 
         if (this.useCenterMode) {
             this.x = x - this.w / 2;
@@ -155,11 +160,12 @@ class TextButton {
         fill(0, 0, 0, currentAlpha);
         
         if (this.isSmall) {
-            textSize(16);
+            textSize(20);
             textAlign(LEFT, CENTER);
-            text(this.text, this.x + 15, this.y + this.h / 2);
+            let pad = this.textPadding !== undefined ? this.textPadding : 15;
+            text(this.text, this.x + pad, this.y + this.h / 2);
         } else {
-            textSize(24);
+            textSize(28);
             textAlign(CENTER, CENTER);
             text(this.text, this.x + this.w / 2, this.y + this.h / 2);
         }
@@ -301,4 +307,3 @@ class AchievementsList {
         image(listBuffer, this.x, this.y);
     }
 }
-
