@@ -53,6 +53,15 @@ function preload() {
     // --- 5. 字体 (可选) ---
     // 【修正】恢复字体加载
     assets.handwritingFont = loadFont('assets/Moon Flower Bold.ttf');
+
+    // --- 6. 音频资源 (新增) ---
+    // 假设的音频文件名，请替换为您自己的文件名
+    assets.bgm_start = null; //loadSound('assets/sfx/calm_theme.mp3');
+    assets.sfx_loop = null; //loadSound('assets/sfx/time_loop.wav');
+    assets.sfx_click = loadSound('assets/sounds/mouseClicked.mp3'); // 用于按钮点击音效
+
+    // --- 7. CG ---
+    assets.cg_getUp = loadImage('assets/cg_getup.png');
 }
 
 function setup() {
