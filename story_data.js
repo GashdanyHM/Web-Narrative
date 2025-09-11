@@ -467,7 +467,7 @@ const story = {
     // 诱惑店员失败的场景
 'seduce_staff_fail_scene': {
     type: 'actionSelection',
-    background: 'scene_store_front', // 沿用背景
+    background: 'staffNoLove',
     dialogue: [
         {speaker:'Staff', line:'...Are you okay?'},
         {speaker:'Staff', line:'Please don\'t do that again.'}
@@ -651,3 +651,4 @@ const allAchievements = {
     //     description: '给游戏作者寄了一盒刀片。'
     // }
 };
+
