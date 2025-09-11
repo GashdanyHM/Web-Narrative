@@ -81,6 +81,7 @@ function preload() {
     assets.water_cactus = loadImage('assets/waterCactus.png');
     assets.pet_cactus = loadImage('assets/petCactus.png');
     assets.cactus_blood_pet_scene = loadImage('assets/lordCactus.png');
+    assets.staffNoLove = loadImage('assets/staffnoLove.png');
     // items
     assets.item_tnt_image = loadImage('assets/tnt.png');
     assets.item_potion_image = loadImage('assets/lovepotion.png');
@@ -203,3 +204,4 @@ function loadScene(nodeId) {
     }
     sceneManager.load(nodeId);
 }
+
