@@ -249,7 +249,7 @@ const story = {
     },
     'cactus_blood_pet_scene': {
         type: 'actionSelection',
-        background: 'cactus_blood_pet',
+        background: 'cactus_blood_pet_scene',
         dialogue: [{speaker:'Bloody Red Lord', line:'Let\'s get going.'}],
         target: 'location_select_inside'
     },
@@ -605,4 +605,5 @@ const allAchievements = {
     // }
 
 };
+
 
