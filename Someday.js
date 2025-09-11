@@ -76,6 +76,7 @@ function preload() {
     assets.ending_didntGetUp = loadImage('assets/didntEvenTry.png');
     assets.handwritingFont = loadFont('assets/MRF Lemonberry Sans.otf');
     assets.cg_getUp = loadImage('assets/cg_getup.png');
+    assets.water_cactus = loadImage('assets/waterCactus.png');
     //sounds
     assets.bgm_start = loadSound('assets/sounds/alarm.mp3');
     assets.sfx_loop = null;
@@ -193,3 +194,4 @@ function loadScene(nodeId) {
     }
     sceneManager.load(nodeId);
 }
+
