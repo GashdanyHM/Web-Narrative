@@ -355,10 +355,34 @@ const story = {
         ],
         choices:[
             //{text: 'Attack', target: 'LordDeath'},
+            {text:'Lord Cactus, Attack!',target: 'lord_attacks_insectoid',condition: 'lordCactusBorn:true'},
+            {text: 'Shoot them', target: 'shoot_insectoid_ending',condition: 'hasGun:true'},
             {text: 'Sure', target: 'endingFoodPoisoning'},
             {text: 'No thanks', target: 'hiking_scene'}
         ]
     },
+    'lord_attacks_insectoid': {
+    type: 'actionSelection',
+    background: 'scene_meetInsectoid', // 沿用背景
+    dialogue: "You command Lord Cactus to attack. It leaps forward, a flurry of spines... but the insectoid is too strong. It swats your companion away.",
+    action: 'update:lordCactusAlive:false',
+    target: 'lord_death_aftermath'
+},
+'lord_death_aftermath': {
+    type: 'actionSelection',
+    background: 'scene_hike',
+    dialogue: "Lord Cactus is gone... forever. The insectoid, startled, scurries away. You are alone.",
+    choices: [
+        { text: '...Continue hiking', target: 'hiking_scene' }
+    ]
+},
+'shoot_insectoid_ending': {
+    type: 'ending',
+    endingTitle: "END 7: Unnecessary Violence",
+    // 这里我复用了一个已有的结局图片作为占位符，您可以换成新的
+    endingImage: 'ending_dieUnderStaff', 
+    dialogue: "You pull out the gun. A loud bang echoes through the mountains. You didn't need to do that.",
+},
     'endingFoodPoisoning':{
         type:'ending',
         endingTitle: "END 6: Don't eat Stranger's Food",
@@ -457,7 +481,7 @@ const story = {
             { id: 'tnt', name: 'TNT', price: 100, image: 'item_tnt_image', stock: 3},
             { id: 'lovePotion', name: 'Love Potion', price: 20, image: 'item_potion_image', stock: 3},
             //{ id: 'blades', name: 'A box of blades', price: 1, image: 'item_blade_image', stock: 1},
-            { id: 'gun', name: 'Gun', price: 50, image: 'item_gun_image', stock: 1},
+            { id: 'gun', name: 'Gun', price: 50, image: 'item_gun_image', stock: 1, purchaseAction: 'update:hasGun:true'},
             //{ id: 'garlic', name: 'Garlic', price: 5, image: 'item_garlic_image', stock: 5},
             //{ id: 'holyWater', name: 'Holy Water', price: 10, image: 'item_holyWater_image', stock: 5},
             //{ id: 'cross', name: 'Cross', price: 15, image: 'item_cross_image', stock: 2},
@@ -571,6 +595,10 @@ const allEndings = {
         title: "END 4: A Beautiful Sunset",
         description: "Isn't it beautiful?"
     },
+        'shoot_insectoid_ending': {
+        title: 'END 7: Unnecessary Violence',
+        description: 'You chose a noisy and brutal solution.'
+    },
 };
 
 // 【新增】所有成就的总览
@@ -603,7 +631,4 @@ const allAchievements = {
     //     title: '砍破第四面墙 / Breaking the Fourth Wall',
     //     description: '给游戏作者寄了一盒刀片。'
     // }
-
 };
-
-
