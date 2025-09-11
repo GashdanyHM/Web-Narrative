@@ -178,7 +178,7 @@ const sceneManager = {
                 const dialogueBoxW = width * 0.8;
                 const dialogueBoxH = 120;
                 const padding = 25;
-                const dialogueBoxTopLeftX = (width / 2) - (dialogBoxW / 2);
+                const dialogueBoxTopLeftX = (width / 2) - (dialogueBoxW / 2);
                 const dialogueBoxTopLeftY = (height - dialogueBoxH - 30);
                 this.dialogueWriter = new Typewriter(nextText, dialogueBoxTopLeftX + padding, dialogueBoxTopLeftY, dialogueBoxW - padding * 2, dialogueBoxH);
                 
@@ -1305,4 +1305,5 @@ drawShopScene: function() {
             this.currentVideo.loop();
         }
     }
+
 };
