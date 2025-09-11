@@ -78,6 +78,7 @@ function preload() {
     assets.cg_getUp = loadImage('assets/cg_getup.png');
     assets.water_cactus = loadImage('assets/waterCactus.png');
     assets.pet_cactus = loadImage('assets/petCactus.png');
+    assets.cactus_blood_pet_scene = loadImage('assets/lordCactus.png');
     //sounds
     assets.bgm_start = loadSound('assets/sounds/alarm.mp3');
     assets.sfx_loop = null;
@@ -195,5 +196,6 @@ function loadScene(nodeId) {
     }
     sceneManager.load(nodeId);
 }
+
 
 
