@@ -458,10 +458,11 @@ const story = {
             { id: 'lovePotion', name: 'Love Potion', price: 20, image: 'item_potion_image', stock: 3},
             //{ id: 'blades', name: 'A box of blades', price: 1, image: 'item_blade_image', stock: 1},
             { id: 'gun', name: 'Gun', price: 50, image: 'item_gun_image', stock: 1},
-            { id: 'garlic', name: 'Garlic', price: 5, image: 'item_garlic_image', stock: 5},
-            { id: 'holyWater', name: 'Holy Water', price: 10, image: 'item_holyWater_image', stock: 5},
-            { id: 'cross', name: 'Cross', price: 15, image: 'item_cross_image', stock: 2},
-            { id: 'silverBullet', name: 'Silver Bullet', price: 25, image: 'item_silverBullet_image', stock: 2}
+            //{ id: 'garlic', name: 'Garlic', price: 5, image: 'item_garlic_image', stock: 5},
+            //{ id: 'holyWater', name: 'Holy Water', price: 10, image: 'item_holyWater_image', stock: 5},
+            //{ id: 'cross', name: 'Cross', price: 15, image: 'item_cross_image', stock: 2},
+            //{ id: 'silverBullet', name: 'Silver Bullet', price: 25, image: 'item_silverBullet_image', stock: 2}
+            {id: 'candy', name: 'Lollipop', price: 5, image: 'item_candy_image', stock: 10}
         ]
     },
 
@@ -604,3 +605,4 @@ const allAchievements = {
     // }
 
 };
+
