@@ -28,6 +28,8 @@ const initialGameStatus = {
     money: 100,
     crimeLevel: 0,
     inventory: {},
+    hasGun: false,
+
     // 仙人掌
     lordCactusAlive: true,
     lordCactusBorn: false,
@@ -82,6 +84,8 @@ function preload() {
     // items
     assets.item_tnt_image = loadImage('assets/tnt.png');
     assets.item_potion_image = loadImage('assets/lovepotion.png');
+    assets.item_gun_image = loadImage('assets/pistol.png');
+
     //sounds
     assets.bgm_start = loadSound('assets/sounds/alarm.mp3');
     assets.sfx_loop = null;
@@ -199,7 +203,3 @@ function loadScene(nodeId) {
     }
     sceneManager.load(nodeId);
 }
-
-
-
-
