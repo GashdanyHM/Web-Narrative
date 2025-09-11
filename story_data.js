@@ -255,7 +255,7 @@ const story = {
     },
     'cactus_lord_rebirth_fail':{
         type: 'actionSelection',
-        background: 'scene_drowned_cactus',
+        background: 'scene_cactus',
         dialogue: ["You took great care of your cactus, and it's growing healthily. But that special connection seems to be lost forever."],
         action:'unlockFaq',
         target:'cactus_alive_scene'
