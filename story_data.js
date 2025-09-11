@@ -320,7 +320,7 @@ const story = {
         background:'fly_locationOptions',
         locations: [
         //{ name: 'Street', target: 'street_scene', image: 'scene_street' },
-        { name: 'School', target: 'school_scene', image: 'scene_school' },
+        //{ name: 'School', target: 'school_scene', image: 'scene_school' },
         { name: 'Store', target: 'store_options', image: 'scene_storeOutside' },
         { name: 'Hiking', target: 'hiking_scene', image: 'scene_hike' }, 
         { name: 'Amusement Park', target: 'park_options', image: 'scene_amusement' },
@@ -412,8 +412,8 @@ const story = {
         type: 'locationSelection',
         background: 'location_select_outside',
         locations: [
-        { name: 'Street', target: 'street_scene', image: 'scene_street' },
-        { name: 'School', target: 'school_scene', image: 'scene_school' },
+        //{ name: 'Street', target: 'street_scene', image: 'scene_street' },
+        //{ name: 'School', target: 'school_scene', image: 'scene_school' },
         { name: 'Store', target: 'store_options', image: 'scene_storeOutside' },
         { name: 'Hiking', target: 'hiking_scene', image: 'scene_hike' }, 
         { name: 'Amusement Park', target: 'park_options', image: 'scene_amusement' },
@@ -602,4 +602,5 @@ const allAchievements = {
     //     title: '砍破第四面墙 / Breaking the Fourth Wall',
     //     description: '给游戏作者寄了一盒刀片。'
     // }
+
 };
