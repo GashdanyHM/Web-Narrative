@@ -913,6 +913,14 @@ drawActionSelection: function() {
                     
                     return;
                 }
+
+                case 'consumeItem': {
+                const itemId = key;
+                if (gameStatus.inventory[itemId] && gameStatus.inventory[itemId] > 0) {
+                    gameStatus.inventory[itemId]--;
+                    console.log(`[INVENTORY] Consumed item: "${itemId}". Remaining: ${gameStatus.inventory[itemId]}`);
+                }
+            }
             }
 
             const oldValue = gameStatus[key];
@@ -937,10 +945,19 @@ drawActionSelection: function() {
     evaluateCondition: function(conditionString) {
         if (!conditionString) return true;
         const parts = conditionString.split(':');
-        const key = parts[0];
+        const keyPath = parts[0];
         const operator = parts.length === 3 ? parts[1] : '===';
         const valueString = parts.length === 3 ? parts[2] : parts[1];
-        let statusValue = gameStatus[key];
+
+        let statusValue = gameStatus;
+        const keys = keyPath.split('.');
+    for (const key of keys) {
+        if (statusValue[key] === undefined) {
+            statusValue = 0; // 如果物品不存在，视其数量为0
+            break;
+        }
+        statusValue = statusValue[key];
+    }
         let conditionValue = valueString === 'true' ? true : valueString === 'false' ? false : parseFloat(valueString);
         
         if (valueString === 'true') {
@@ -1001,7 +1018,7 @@ drawActionSelection: function() {
             this.activeShopItems = [];
             this.shopScrollX = 0;
             this.uiElements.pauseButton = new ImageButton(40, 40, 40, 40, assets.ui_pause_normal, assets.ui_pause_hover);
-            this.uiElements.closeButton = new ImageButton(width - 40, 40, 40, 40, assets.ui_close_icon_normal, assets.ui_close_icon_hover);
+            this.uiElements.closeButton = new TextButton(width - 70, 40, 100, 40, "Back", false, true);
 
             const videoKey = sceneData.tvVideos[gameStatus.crimeLevel] || sceneData.tvVideos[0];
             this.currentVideo = assets[videoKey];
@@ -1045,7 +1062,7 @@ drawShopScene: function() {
     this.uiElements.closeButton.display();
     push();
     fill(0); textAlign(RIGHT, CENTER); textSize(30);
-    text(`$ ${gameStatus.money}`, width - 120, 40);
+    text(`$ ${gameStatus.money}`, width - 50, 80);
     pop();
 
     this.activeShopItems.forEach(itemBtn => {
