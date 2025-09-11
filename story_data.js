@@ -455,9 +455,28 @@ const story = {
         choices: [
             { text: 'Shop', target: 'store_buy_scene' },
             { text: 'Rob', target: 'store_robbery_scene', action: 'unlockAchievement:brute_force' }, // 店员会掏出武器说“I'm sorry what did you just say?”
+            {
+            text: 'Seduce the staff', 
+            target: 'seduce_staff_fail_scene',
+            // 条件: 检查 inventory 中 lovePotion 的数量是否大于 0
+            condition: 'inventory.lovePotion:>:0' 
+        },
             { text: 'Leave', target: 'location_select_outside' } // 假设你有一个室外选择场景
         ]
     },
+    // 诱惑店员失败的场景
+'seduce_staff_fail_scene': {
+    type: 'actionSelection',
+    background: 'scene_store_front', // 沿用背景
+    dialogue: [
+        {speaker:'Staff', line:'...Are you okay?'},
+        {speaker:'Staff', line:'Please don\'t do that again.'}
+    ],
+    // 在这里执行两个动作：消耗物品 和 解锁成就
+    action: 'consumeItem:lovePotion;unlockAchievement:worth_a_try',
+    // 点击屏幕后，自动跳转回商店选项
+    target: 'store_options'
+},
     // 购买界面
     'store_buy_scene': {
         type: 'shopScene',
