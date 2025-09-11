@@ -164,7 +164,9 @@ const sceneManager = {
             if (this.dialogueIndex < this.currentSceneData.dialogue.length - 1) {
                 console.log(`[EVENT] Advancing dialogue...`);
                 this.dialogueIndex++;
+
                 let nextText = '';
+
                 const dialogueData = this.currentSceneData.dialogue;
                 if (typeof dialogueData[this.dialogueIndex] === 'object') {
                     const nextDialogue = dialogueData[this.dialogueIndex];
@@ -180,6 +182,7 @@ const sceneManager = {
                 const padding = 25;
                 const dialogueBoxTopLeftX = (width / 2) - (dialogueBoxW / 2);
                 const dialogueBoxTopLeftY = (height - dialogueBoxH - 30);
+
                 this.dialogueWriter = new Typewriter(nextText, dialogueBoxTopLeftX + padding, dialogueBoxTopLeftY, dialogueBoxW - padding * 2, dialogueBoxH);
                 
                 return; // 推进对话后，结束本次点击事件
@@ -907,6 +910,7 @@ drawActionSelection: function() {
                 // }
                 case 'lordDies': {
                     gameStatus.lordCactusAlive = false;
+                    
                     return;
                 }
             }
@@ -997,7 +1001,7 @@ drawActionSelection: function() {
             this.activeShopItems = [];
             this.shopScrollX = 0;
             this.uiElements.pauseButton = new ImageButton(40, 40, 40, 40, assets.ui_pause_normal, assets.ui_pause_hover);
-            this.uiElements.closeButton = new TextButton(width - 70, 40, 100, 40, "Back", false, true);
+            this.uiElements.closeButton = new ImageButton(width - 40, 40, 40, 40, assets.ui_close_icon_normal, assets.ui_close_icon_hover);
 
             const videoKey = sceneData.tvVideos[gameStatus.crimeLevel] || sceneData.tvVideos[0];
             this.currentVideo = assets[videoKey];
@@ -1041,7 +1045,7 @@ drawShopScene: function() {
     this.uiElements.closeButton.display();
     push();
     fill(0); textAlign(RIGHT, CENTER); textSize(30);
-    text(`$ ${gameStatus.money}`, width - 125, 40);
+    text(`$ ${gameStatus.money}`, width - 120, 40);
     pop();
 
     this.activeShopItems.forEach(itemBtn => {
@@ -1305,6 +1309,4 @@ drawShopScene: function() {
             this.currentVideo.loop();
         }
     }
-
 };
-
