@@ -204,4 +204,3 @@ function loadScene(nodeId) {
     }
     sceneManager.load(nodeId);
 }
-
