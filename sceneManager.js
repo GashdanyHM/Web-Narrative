@@ -997,7 +997,7 @@ drawActionSelection: function() {
             this.activeShopItems = [];
             this.shopScrollX = 0;
             this.uiElements.pauseButton = new ImageButton(40, 40, 40, 40, assets.ui_pause_normal, assets.ui_pause_hover);
-            this.uiElements.closeButton = new ImageButton(width - 40, 40, 40, 40, assets.ui_close_icon_normal, assets.ui_close_icon_hover);
+            this.uiElements.closeButton = new TextButton(width - 70, 40, 100, 40, "Back", false, true);
 
             const videoKey = sceneData.tvVideos[gameStatus.crimeLevel] || sceneData.tvVideos[0];
             this.currentVideo = assets[videoKey];
@@ -1041,7 +1041,7 @@ drawShopScene: function() {
     this.uiElements.closeButton.display();
     push();
     fill(0); textAlign(RIGHT, CENTER); textSize(30);
-    text(`$ ${gameStatus.money}`, width - 120, 40);
+    text(`$ ${gameStatus.money}`, width - 125, 40);
     pop();
 
     this.activeShopItems.forEach(itemBtn => {
@@ -1307,3 +1307,4 @@ drawShopScene: function() {
     }
 
 };
+
